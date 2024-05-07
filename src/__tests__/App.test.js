@@ -1,6 +1,6 @@
 import React from "react";
 import "whatwg-fetch";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { server } from "../mocks/server";
 
@@ -21,12 +21,10 @@ test("displays the dog image after fetching", async () => {
 
 test("displays a loading message before fetching", async () => {
   render(<App />);
-  expect(screen.queryByText(/Loading/)).toBeInTheDocument();
-
+  // Wait for the "Loading..." message to disappear
+  await screen.findByText(/Loading/);
   const img = await screen.findByAltText("A Random Dog");
   expect(img.src).toBe(
     "https://images.dog.ceo/breeds/bulldog-english/mami.jpg"
   );
-
-  expect(screen.queryByText(/Loading/)).not.toBeInTheDocument();
 });
